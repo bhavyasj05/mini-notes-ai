@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini AI Notes Manager</title>
+</head>
+<body>
+
+<h2>Add Note</h2>
+
+<input id="title" placeholder="Title"><br><br>
+<textarea id="content" placeholder="Content"></textarea><br><br>
+<button onclick="addNote()">Add Note</button>
+
+<hr>
+
+<h2>Search Notes</h2>
+
+<input id="query" placeholder="Search text">
+<button onclick="searchNotes()">Search</button>
+
+<pre id="output"></pre>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+async function addNote() {
+  const res = await fetch(API + "/notes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: document.getElementById("title").value,
+      content: document.getElementById("content").value
+    })
+  });
+
+  const data = await res.json();
+  alert(data.message);
+}
+
+async function searchNotes() {
+  const res = await fetch(API + "/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: document.getElementById("query").value
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").textContent =
+    JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
